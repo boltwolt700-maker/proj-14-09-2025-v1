@@ -875,6 +875,17 @@ EDUCATION
     { name: 'Gray', primary: '#6B7280', secondary: '#9CA3AF', accent: '#3B82F6' }
   ];
 
+  const templateOptions = [
+    { id: 'classic-1', name: 'Professional Classic', category: 'classic', preview: 'bg-gradient-to-br from-blue-600 to-blue-800', description: 'Traditional professional layout' },
+    { id: 'classic-2', name: 'Executive Classic', category: 'classic', preview: 'bg-gradient-to-br from-gray-600 to-gray-800', description: 'Executive level traditional' },
+    { id: 'classic-3', name: 'Academic Classic', category: 'classic', preview: 'bg-gradient-to-br from-green-600 to-green-800', description: 'Academic focused layout' },
+    { id: 'classic-4', name: 'Corporate Classic', category: 'classic', preview: 'bg-gradient-to-br from-purple-600 to-purple-800', description: 'Corporate environment' },
+    { id: 'classic-5', name: 'Finance Classic', category: 'classic', preview: 'bg-gradient-to-br from-red-600 to-red-800', description: 'Finance industry focused' },
+    { id: 'photo-1', name: 'Photo Professional', category: 'photo', preview: 'bg-gradient-to-br from-teal-500 to-cyan-600', description: 'Professional with photo space' },
+    { id: 'photo-2', name: 'Photo Creative', category: 'photo', preview: 'bg-gradient-to-br from-orange-500 to-red-600', description: 'Creative with photo integration' },
+    { id: 'photo-3', name: 'Photo Executive', category: 'photo', preview: 'bg-gradient-to-br from-slate-500 to-gray-600', description: 'Executive with photo' },
+    { id: 'photo-4', name: 'Photo Modern', category: 'photo', preview: 'bg-gradient-to-br from-violet-500 to-purple-600', description: 'Modern photo layout' },
+    { id: 'photo-5', name: 'Photo Elegant', category: 'photo', preview: 'bg-gradient-to-br from-emerald-500 to-teal-600', description: 'Elegant photo design' },
     { id: 'modern-1', name: 'Tech Modern', category: 'modern', preview: 'bg-gradient-to-br from-indigo-500 to-purple-600', description: 'Technology industry modern' },
     { id: 'modern-2', name: 'Creative Modern', category: 'modern', preview: 'bg-gradient-to-br from-pink-500 to-rose-600', description: 'Creative and bold design' },
     { id: 'modern-3', name: 'Business Modern', category: 'modern', preview: 'bg-gradient-to-br from-blue-500 to-cyan-600', description: 'Modern business approach' },
