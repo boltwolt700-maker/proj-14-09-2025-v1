@@ -25,7 +25,6 @@ import { useTheme } from '../../hooks/useTheme';
 import ResumeLibrary from './ResumeLibrary';
 import AICopilot from './AICopilot';
 import ResumePreview from './ResumePreview';
-import ResumePreview from './ResumePreview';
 import ResumeListViewer from './ResumeListViewer';
 
 interface Resume {
