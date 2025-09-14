@@ -2062,44 +2062,19 @@ EDUCATION
                   Templates
                 </button>
                 
-                {selectedTemplate && (
-            {/* Resume Content */}
-            <div className="flex-1 flex">
-              {showFormattedPreview && selectedTemplate ? (
-                <div className="flex-1 p-6">
-                  <div className="bg-white rounded-lg h-full overflow-auto">
-                    <iframe
-                      srcDoc={selectedTemplate.htmlContent}
-                      className="w-full h-full border-none"
-                      title="Resume Preview"
-                    />
+                <button
+                  onClick={() => {
+                    alert('Word document download started!');
+                    setShowExportModal(false);
+                  }}
+                  className="w-full flex items-center gap-3 p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                >
+                  <FileText className="w-5 h-5" />
+                  <div className="text-left">
+                    <div className="font-medium">Download as Word</div>
+                    <div className="text-sm opacity-80">Editable document format</div>
                   </div>
-                </div>
-              ) : (
-                <div className="flex-1 p-6">
-                  <div className="bg-slate-800 rounded-lg p-6 h-full">
-                    <textarea
-                      value={activeResume?.content || ''}
-                      onChange={(e) => {
-                        if (activeResume) {
-                          setResumes(prev => prev.map(r => 
-                            r.id === activeResume.id 
-                              ? { ...r, content: e.target.value, updatedAt: new Date().toISOString() }
-                              : r
-                          ));
-                        }
-                      }}
-                      onSelect={(e) => {
-                        const target = e.target as HTMLTextAreaElement;
-                        const selected = target.value.substring(target.selectionStart, target.selectionEnd);
-                        setSelectedText(selected);
-                      }}
-                      placeholder="Start typing your resume content here..."
-                      className="w-full h-full bg-transparent text-white placeholder-slate-400 border-none outline-none resize-none font-mono text-sm leading-relaxed"
-                    />
-                  </div>
-                </div>
-              )}
+                </button>
               </div>
             </div>
 
@@ -2114,9 +2089,6 @@ EDUCATION
           </div>
         </div>
       )}
-    </div>
-  );
-};
 
       {/* Template Selector Modal */}
       {showTemplateSelector && (
@@ -2163,4 +2135,51 @@ EDUCATION
           </div>
         </div>
       )}
+
+      {selectedTemplate && (
+        <div>
+          {/* Resume Content */}
+          <div className="flex-1 flex">
+            {showFormattedPreview && selectedTemplate ? (
+              <div className="flex-1 p-6">
+                <div className="bg-white rounded-lg h-full overflow-auto">
+                  <iframe
+                    srcDoc={selectedTemplate.htmlContent}
+                    className="w-full h-full border-none"
+                    title="Resume Preview"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex-1 p-6">
+                <div className="bg-slate-800 rounded-lg p-6 h-full">
+                  <textarea
+                    value={activeResume?.content || ''}
+                    onChange={(e) => {
+                      if (activeResume) {
+                        setResumes(prev => prev.map(r => 
+                          r.id === activeResume.id 
+                            ? { ...r, content: e.target.value, updatedAt: new Date().toISOString() }
+                            : r
+                        ));
+                      }
+                    }}
+                    onSelect={(e) => {
+                      const target = e.target as HTMLTextAreaElement;
+                      const selected = target.value.substring(target.selectionStart, target.selectionEnd);
+                      setSelectedText(selected);
+                    }}
+                    placeholder="Start typing your resume content here..."
+                    className="w-full h-full bg-transparent text-white placeholder-slate-400 border-none outline-none resize-none font-mono text-sm leading-relaxed"
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default SmartResumeStudio;
