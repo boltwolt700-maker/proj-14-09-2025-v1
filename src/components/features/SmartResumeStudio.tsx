@@ -25,6 +25,7 @@ import { useTheme } from '../../hooks/useTheme';
 import ResumeLibrary from './ResumeLibrary';
 import AICopilot from './AICopilot';
 import ResumePreview from './ResumePreview';
+import ResumePreview from './ResumePreview';
 import ResumeListViewer from './ResumeListViewer';
 
 interface Resume {
@@ -37,6 +38,14 @@ interface Resume {
   updatedAt: string;
 }
 
+interface Template {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  preview: string;
+  htmlContent: string;
+}
 interface FormattingSettings {
   fontStyle: string;
   fontSize: number;
@@ -54,6 +63,9 @@ const SmartResumeStudio = () => {
   const [step, setStep] = useState<'selection' | 'upload' | 'studio'>('selection');
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploadError, setUploadError] = useState('');
+  const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+  const [showFormattedPreview, setShowFormattedPreview] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [resumes, setResumes] = useState<Resume[]>([]);
   const [activeResumeId, setActiveResumeId] = useState<string | null>(null);
@@ -373,6 +385,417 @@ EDUCATION
     }
   };
 
+  const templates: Template[] = [
+    {
+      id: 'professional-classic',
+      name: 'Professional Classic',
+      category: 'Traditional',
+      description: 'Traditional professional layout',
+      preview: 'bg-gradient-to-br from-blue-600 to-blue-800',
+      htmlContent: `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional CV Template</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background-color: #FDFBF7;
+            color: #333333;
+            line-height: 1.6;
+            font-size: 10.5pt;
+        }
+
+        .cv-container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            min-height: 11in;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, #003366 0%, #004080 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 32pt;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .title {
+            font-size: 14pt;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .content {
+            display: flex;
+            min-height: calc(11in - 140px);
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 30%;
+            background-color: #f8f6f2;
+            padding: 30px 25px;
+            border-right: 1px solid #e0ddd6;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 14pt;
+            color: #003366;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
+            font-weight: 700;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 5px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 9.5pt;
+        }
+
+        .contact-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 10px;
+            fill: #003366;
+        }
+
+        .profile-text {
+            font-size: 9.5pt;
+            text-align: justify;
+            line-height: 1.5;
+        }
+
+        .skills-list, .languages-list {
+            list-style: none;
+        }
+
+        .skills-list li, .languages-list li {
+            padding: 4px 0;
+            font-size: 9.5pt;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .skills-list li:before {
+            content: "•";
+            color: #003366;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Right Main Column */
+        .main-content {
+            width: 70%;
+            padding: 30px 35px;
+        }
+
+        .main-section {
+            margin-bottom: 35px;
+        }
+
+        .main-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .main-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16pt;
+            color: #003366;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            border-bottom: 3px solid #003366;
+            padding-bottom: 8px;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0ddd6;
+        }
+
+        .experience-item:last-child, .education-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .job-header, .education-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .job-title, .degree-title {
+            font-weight: 700;
+            font-size: 11.5pt;
+            color: #333333;
+            margin-bottom: 4px;
+        }
+
+        .company-name, .university-name {
+            font-style: italic;
+            font-size: 10pt;
+            color: #666666;
+        }
+
+        .date-range {
+            font-size: 9.5pt;
+            color: #666666;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        .job-description {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .job-description li {
+            margin-bottom: 6px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 10pt;
+            line-height: 1.5;
+        }
+
+        .job-description li:before {
+            content: "▸";
+            color: #003366;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .awards-list, .certifications-list {
+            list-style: none;
+        }
+
+        .awards-list li, .certifications-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 10pt;
+        }
+
+        .awards-list li:before, .certifications-list li:before {
+            content: "★";
+            color: #003366;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .sidebar, .main-content {
+                width: 100%;
+            }
+            
+            .sidebar {
+                border-right: none;
+                border-bottom: 1px solid #e0ddd6;
+            }
+            
+            .job-header, .education-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .date-range {
+                margin-top: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cv-container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1 class="name" contenteditable="true" data-placeholder="Your Full Name">Your Full Name</h1>
+            <p class="title" contenteditable="true" data-placeholder="Your Professional Title">Your Professional Title</p>
+        </div>
+
+        <div class="content">
+            <!-- Left Sidebar -->
+            <div class="sidebar" id="sidebar-container">
+                <!-- Contact Information -->
+                <div class="sidebar-section" id="contact-section">
+                    <h2 class="section-title">Contact</h2>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+                        </svg>
+                        <span contenteditable="true" data-placeholder="Your Phone Number">Your Phone Number</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/>
+                        </svg>
+                        <span contenteditable="true" data-placeholder="Your Email Address">Your Email Address</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path d="M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5A2,2 0 0,1 3,19V5A2,2 0 0,1 5,3H19M18.5,18.5V13.2A3.26,3.26 0 0,0 15.24,9.94C14.39,9.94 13.4,10.46 12.92,11.24V10.13H10.13V18.5H12.92V13.57C12.92,12.8 13.54,12.17 14.31,12.17A1.4,1.4 0 0,1 15.71,13.57V18.5H18.5M6.88,8.56A1.68,1.68 0 0,0 8.56,6.88C8.56,5.95 7.81,5.19 6.88,5.19A1.69,1.69 0 0,0 5.19,6.88C5.19,7.81 5.95,8.56 6.88,8.56M8.27,18.5V10.13H5.5V18.5H8.27Z"/>
+                        </svg>
+                        <span contenteditable="true" data-placeholder="Your LinkedIn Profile">Your LinkedIn Profile</span>
+                    </div>
+                    <div class="contact-item">
+                        <svg class="contact-icon" viewBox="0 0 24 24">
+                            <path d="M12,11.5A2.5,2.5 0 0,1 9.5,9A2.5,2.5 0 0,1 12,6.5A2.5,2.5 0 0,1 14.5,9A2.5,2.5 0 0,1 12,11.5M12,2A7,7 0 0,0 5,9C5,14.25 12,22 12,22C12,22 19,14.25 19,9A7,7 0 0,0 12,2Z"/>
+                        </svg>
+                        <span contenteditable="true" data-placeholder="Your City, State">Your City, State</span>
+                    </div>
+                </div>
+
+                <!-- Profile -->
+                <div class="sidebar-section" id="profile-section">
+                    <h2 class="section-title">Profile</h2>
+                    <p class="profile-text" contenteditable="true" data-placeholder="Write your professional summary here...">Click to add your professional summary</p>
+                </div>
+
+                <!-- Core Skills -->
+                <div class="sidebar-section" id="skills-section">
+                    <h2 class="section-title">Core Skills</h2>
+                    <ul class="skills-list">
+                        <li contenteditable="true">Click to add skill</li>
+                    </ul>
+                </div>
+
+                <!-- Languages -->
+                <div class="sidebar-section" id="languages-section">
+                    <h2 class="section-title">Languages</h2>
+                    <ul class="languages-list">
+                        <li contenteditable="true">Click to add language</li>
+                    </ul>
+                </div>
+
+                <!-- References -->
+                <div class="sidebar-section" id="references-section">
+                    <h2 class="section-title">References</h2>
+                    <p class="profile-text" contenteditable="true">Click to add references information</p>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="main-content" id="main-container">
+                <!-- Professional Experience -->
+                <div class="main-section" id="experience-section">
+                    <h2 class="main-section-title">Professional Experience</h2>
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title" contenteditable="true">Click to add job title</div>
+                                <div class="company-name" contenteditable="true">Click to add company name and location</div>
+                            </div>
+                            <div class="date-range" contenteditable="true">Click to add dates</div>
+                        </div>
+                        <ul class="job-description">
+                            <li contenteditable="true">Click to add job responsibility or achievement</li>
+                        </ul>
+                    </div>
+
+                    <div class="experience-item">
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title" contenteditable="true">Click to add job title</div>
+                                <div class="company-name" contenteditable="true">Click to add company name and location</div>
+                            </div>
+                            <div class="date-range" contenteditable="true">Click to add dates</div>
+                        </div>
+                        <ul class="job-description">
+                            <li contenteditable="true">Click to add job responsibility or achievement</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Education -->
+                <div class="main-section" id="education-section">
+                    <h2 class="main-section-title">Education</h2>
+                    <div class="education-item">
+                        <div class="education-header">
+                            <div>
+                                <div class="degree-title" contenteditable="true">Click to add degree</div>
+                                <div class="university-name" contenteditable="true">Click to add university name and location</div>
+                            </div>
+                            <div class="date-range" contenteditable="true">Click to add graduation date</div>
+                        </div>
+                    </div>
+
+                    <div class="education-item">
+                        <div class="education-header">
+                            <div>
+                                <div class="degree-title" contenteditable="true">Click to add degree</div>
+                                <div class="university-name" contenteditable="true">Click to add university name and location</div>
+                            </div>
+                            <div class="date-range" contenteditable="true">Click to add graduation date</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Awards & Accomplishments -->
+                <div class="main-section" id="awards-section">
+                    <h2 class="main-section-title">Awards & Accomplishments</h2>
+                    <ul class="awards-list">
+                        <li contenteditable="true">Click to add award or accomplishment</li>
+                    </ul>
+                </div>
+
+                <!-- Certifications & Licenses -->
+                <div class="main-section" id="certifications-section">
+                    <h2 class="main-section-title">Certifications & Licenses</h2>
+                    <ul class="certifications-list">
+                        <li contenteditable="true">Click to add certification</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>`
+    }
+  ];
 
   const handleAddSection = (sectionName: string) => {
     if (!activeSections.includes(sectionName)) {
@@ -999,6 +1422,11 @@ EDUCATION
     );
   }
 
+  const handleTemplateSelect = (template: Template) => {
+    setSelectedTemplate(template);
+    setShowFormattedPreview(true);
+    setShowTemplateSelector(false);
+  };
   // Step 3: Studio Interface (the main formatting interface)
   return (
     <div className="flex h-screen bg-slate-950">
@@ -1027,6 +1455,14 @@ EDUCATION
               >
                 Design
               </button>
+          
+          <button
+            onClick={() => setShowTemplateSelector(true)}
+            className="w-full flex items-center justify-center gap-2 py-3 px-4 border border-slate-600 text-slate-300 rounded-lg font-medium hover:bg-slate-800 transition-colors"
+          >
+            <Eye className="w-4 h-4" />
+            Templates
+          </button>
               <button
                 onClick={() => setActiveTab('formatting')}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -1619,20 +2055,52 @@ EDUCATION
                     <div className="text-sm opacity-80">Best for online applications</div>
                   </div>
                 </button>
-                
                 <button
-                  onClick={() => {
-                    alert('Word document download started!');
-                    setShowExportModal(false);
-                  }}
-                  className="w-full flex items-center gap-3 p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                  onClick={() => setShowTemplateSelector(true)}
+                  className="flex items-center gap-2 px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm transition-colors"
                 >
-                  <FileText className="w-5 h-5" />
-                  <div className="text-left">
-                    <div className="font-medium">Download as Word</div>
-                    <div className="text-sm opacity-80">Editable document format</div>
-                  </div>
+                  <Eye className="w-4 h-4" />
+                  Templates
                 </button>
+                
+                {selectedTemplate && (
+            {/* Resume Content */}
+            <div className="flex-1 flex">
+              {showFormattedPreview && selectedTemplate ? (
+                <div className="flex-1 p-6">
+                  <div className="bg-white rounded-lg h-full overflow-auto">
+                    <iframe
+                      srcDoc={selectedTemplate.htmlContent}
+                      className="w-full h-full border-none"
+                      title="Resume Preview"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1 p-6">
+                  <div className="bg-slate-800 rounded-lg p-6 h-full">
+                    <textarea
+                      value={activeResume?.content || ''}
+                      onChange={(e) => {
+                        if (activeResume) {
+                          setResumes(prev => prev.map(r => 
+                            r.id === activeResume.id 
+                              ? { ...r, content: e.target.value, updatedAt: new Date().toISOString() }
+                              : r
+                          ));
+                        }
+                      }}
+                      onSelect={(e) => {
+                        const target = e.target as HTMLTextAreaElement;
+                        const selected = target.value.substring(target.selectionStart, target.selectionEnd);
+                        setSelectedText(selected);
+                      }}
+                      placeholder="Start typing your resume content here..."
+                      className="w-full h-full bg-transparent text-white placeholder-slate-400 border-none outline-none resize-none font-mono text-sm leading-relaxed"
+                    />
+                  </div>
+                </div>
+              )}
               </div>
             </div>
 
@@ -1651,4 +2119,49 @@ EDUCATION
   );
 };
 
+      {/* Template Selector Modal */}
+      {showTemplateSelector && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-800 rounded-2xl border border-slate-700 w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="flex items-center justify-between p-6 border-b border-slate-700">
+              <h3 className="text-xl font-semibold text-white">Choose Resume Template</h3>
+              <button
+                onClick={() => setShowTemplateSelector(false)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {templates.map((template) => (
+                  <button
+                    key={template.id}
+                    onClick={() => handleTemplateSelect(template)}
+                    className={`p-4 rounded-xl border text-left transition-all duration-200 hover:transform hover:scale-105 ${
+                      selectedTemplate?.id === template.id
+                        ? 'border-indigo-500 bg-indigo-500/10'
+                        : 'border-slate-700 hover:border-slate-600'
+                    }`}
+                  >
+                    <div className={`w-full h-32 rounded-lg mb-4 ${template.preview} flex items-center justify-center`}>
+                      <FileText className="w-8 h-8 text-white" />
+                    </div>
+                    <h4 className={`font-semibold mb-2 ${
+                      selectedTemplate?.id === template.id ? 'text-indigo-400' : 'text-white'
+                    }`}>
+                      {template.name}
+                    </h4>
+                    <p className="text-sm text-slate-400 mb-2">{template.description}</p>
+                    <span className="text-xs bg-slate-700 text-slate-300 px-2 py-1 rounded">
+                      {template.category}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 export default SmartResumeStudio;
